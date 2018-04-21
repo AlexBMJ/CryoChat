@@ -2,8 +2,8 @@ from tkinter import *
 from tkinter import ttk, messagebox
 from subprocess import Popen, PIPE
 from tkinter.ttk import *
-from Cryptodome import Random
-from Cryptodome.Cipher import AES
+from Crypto import Random
+from Crypto.Cipher import AES
 from socket import socket, gethostbyname, gethostname, AF_INET, SOCK_DGRAM, SHUT_RDWR
 import os, hashlib, binascii, sys, subprocess, time, threading, queue, ssl, base64, collections
 
@@ -405,8 +405,7 @@ class MainClass:
 
 	def RestartThread(self):
 		time.sleep(0.2)
-		Popen([scriptpath + '.exe'], stdout=PIPE, stderr=PIPE)
-		#Popen(['python', scriptpath + '.pyw'], stdout=PIPE, stderr=PIPE)
+		Popen(['python', scriptpath], stdout=PIPE, stderr=PIPE)
 		sys.exit()
 
 	def ProcessIncoming(self):
@@ -684,5 +683,5 @@ if __name__ == '__main__':
 	global scriptpath
 	global folderpath
 	folderpath = os.path.dirname(os.path.abspath(__file__))
-	scriptpath = os.path.abspath(__file__)[:-3]
+	scriptpath = os.path.abspath(__file__)
 	main()
