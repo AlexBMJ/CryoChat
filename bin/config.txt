@@ -1,0 +1,6 @@
+{
+'PeerPort':'4422',
+'Blacklist':'()',
+'LastConnectedIP':'',
+'DefaultName':'Anonymous'
+}
