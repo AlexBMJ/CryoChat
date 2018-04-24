@@ -318,7 +318,7 @@ class MainClass:
 			return None
 
 		if len(msg_send) <= 500 and len(msg_send) > 0:
-			self.history.append(msg_send)
+			self.history.appendleft(msg_send)
 
 		if msg_send.startswith("/"):
 			self.CommandHandler(msg_send)
