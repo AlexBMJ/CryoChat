@@ -352,8 +352,6 @@ class MainClass:
 
 	def connectcmd(self):
 		if self.connected == False:
-			skip = False
-
 			self.target_ip_address = ""
 
 			try:
