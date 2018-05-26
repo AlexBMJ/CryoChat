@@ -10,6 +10,7 @@ from socket import socket, gethostbyname, gethostname, AF_INET, SOCK_DGRAM, SHUT
 import os, hashlib, binascii, sys, subprocess, time, threading, queue, ssl, base64, collections
 
 import KeyExchange
+import ConfigHandler
 
 # Basic info needed for KeyGenrator
 random_function = ssl.RAND_bytes
@@ -275,48 +276,16 @@ class MainClass:
 		self.recvmsg_disp_queue = queue.Queue()
 		self.alert_disp_queue = queue.Queue()
 		self.ownmsg_disp_queue = queue.Queue()
-		
-		# Run Read config
-		self.ReadConfig()
-		# Call the Gui and define it for later use
+
+		ConfigHandler.ReadConfig(folderpath)
+
 		self.GUI = MainWindow(self.master, self.send_queue, self.notif_disp_queue, self.recvmsg_disp_queue, self.alert_disp_queue, self.ownmsg_disp_queue, self.config_dict, self.history)
 		self.GUI.inputEntry.focus()
-		# Run the main message loop
+
 		self.TKLoop()
 
-	# This function reads the config and structures it into variables
-	def ReadConfig(self):
-		if (os.path.exists(folderpath + '\\bin') == False):
-			messagebox.showerror("bin folder missing", 'The "bin" folder is missing.\nPlease install the missing assets!')
-			os.remove(folderpath + '\\bin\\config.txt')
-			sys.exit()
 
-		if (os.path.exists(folderpath + '\\bin\\config.txt') == False):
 
-			self.config_dict = {'DefaultName':"Anonymous",'PeerPort':"4422",'Blacklist':"[""]",'LastConnectedIP':""}
-
-			write_config = str(self.config_dict).replace('{','{\n').replace('}','\n}').replace(',',',\n').replace(' ', '')
-
-			configfile = open(folderpath + '\\bin\\config.txt', 'w')
-			configfile.write(write_config)
-			configfile.close()
-
-		configfile = open(folderpath + '\\bin\\config.txt', 'r')
-		cfg_content = configfile.read().replace('\n','')
-		configfile.close()
-
-		try:
-			self.config_dict = eval(cfg_content)
-
-		except:
-			msgbox_result = messagebox.askyesno("Config File Error", '"config.txt" is either corrupt or has missing data.\nWould you like to create a new one?')
-			if (msgbox_result == True):
-				os.remove(folderpath + '\\bin\\config.txt')
-			sys.exit()
-
-		self.StartListener()
-
-		# This is the socket setup, which starts a listener on the given port and your local ip adress
 	def StartListener(self):
 		try:
 			self.PORT_NUMBER = int(self.config_dict['PeerPort'])
