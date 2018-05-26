@@ -1,5 +1,4 @@
 # Made by Alex & Lasse
-# Lmao haha
 
 # Import Statements
 from tkinter import Tk, PhotoImage, Frame, Entry, Button, Text, ttk, messagebox, Toplevel, Listbox, Label, ANCHOR, END, WORD
