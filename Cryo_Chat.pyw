@@ -232,6 +232,8 @@ class MainWindow():
 		self.chatText.tag_config("alert", background="salmon", foreground="black")
 		self.chatText.see("end")
 
+#github test
+
 	def SendMsg(self, NULL=""):
 		self.history_index = -1
 		self.send_queue.put(self.inputEntry.get())
