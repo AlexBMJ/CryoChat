@@ -24,12 +24,15 @@ class ReadConfig():
 				try:
 					return eval(cfg_content)
 				except:
-					msgbox_result = messagebox.askyesno("Config File Error", '"config.txt" is either corrupt or has missing data.\nWould you like to create a new one?')
-					if (msgbox_result == True):
-						os.remove(self.folderpath + '\\bin\\config.txt')
-					sys.exit()
+					self.error()
 			else:
-				pass
+				self.error()
+
+	def error(self):
+		msgbox_result = messagebox.askyesno("Config File Error", '"config.txt" is either corrupt or has missing data.\nWould you like to create a new one?')
+		if (msgbox_result == True):
+			os.remove(self.folderpath + '\\bin\\config.txt')
+		sys.exit()
 
 if __name__ == '__main__':
 	print('module file')
