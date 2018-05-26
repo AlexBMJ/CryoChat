@@ -2,5 +2,5 @@
 'PeerPort':'4422',
 'Blacklist':'()',
 'LastConnectedIP':'',
-'DefaultName':'Alexisanignig'
+'DefaultName':''
 }
