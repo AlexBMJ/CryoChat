@@ -6,11 +6,11 @@ from tkinter.ttk import Entry, Button, Separator
 from subprocess import Popen, PIPE
 from Crypto import Random
 from Crypto.Cipher import AES
-from socket import socket, gethostbyname, gethostname, AF_INET, SOCK_DGRAM, SHUT_RDWR
 import os, hashlib, binascii, sys, subprocess, time, threading, queue, ssl, base64, collections
 
 import KeyExchange
 import ConfigHandler
+import SocketManager
 
 
 # Settings Window GUI
@@ -273,36 +273,22 @@ class MainClass:
 		self.alert_disp_queue = queue.Queue()
 		self.ownmsg_disp_queue = queue.Queue()
 
-		self.config_dict = ConfigHandler.ReadConfig.main(folderpath)
+		self.config_dict = ConfigHandler.ReadConfig(folderpath)
+		
+
 
 		self.GUI = MainWindow(self.master, self.send_queue, self.notif_disp_queue, self.recvmsg_disp_queue, self.alert_disp_queue, self.ownmsg_disp_queue, self.config_dict, self.history)
 		self.GUI.inputEntry.focus()
 
 		self.TKLoop()
 
+		self.PORT_NUMBER = SocketManager.ConnectionSetup.StartListener(self.config_dict)
 
-
-	def StartListener(self):
-		try:
-			self.PORT_NUMBER = int(self.config_dict['PeerPort'])
-		except ValueError:
-			messagebox.showerror("Port Error", "Port must be an integer!")
-			sys.exit()
-
-		hostName = gethostbyname('0.0.0.0')
-		self.StartSocket = socket(AF_INET, SOCK_DGRAM)
-		try:
-			self.StartSocket.bind((hostName, self.PORT_NUMBER))
-		except:
-			self.StartSocket.shutdown(SHUT_RDWR)
-			messagebox.showerror("Broadcast Error", 'Only one listener can be opened on this port (' + str(self.PORT_NUMBER) + ').\nTry closing any previous instances of the program.')
-			sys.exit()
-
-		self.notif_disp_queue.put(gethostbyname(gethostname()) + ":" + str(self.PORT_NUMBER))
+		self.notif_disp_queue.put(SocketManager.ConnectionSetup.GetIPaddress() + ":" + str(self.PORT_NUMBER))
 		
 	# Main loop which updates all functions needed
 	def TKLoop(self):
-		ThreadedLoop(self.StartSocket, self.recv_queue).start()
+		SocketManager.ConnectionSetup.StartSocketThread(self.recv_queue)
 		self.ProcessOutgoing()
 		self.ProcessIncoming()
 		self.GUI.UpdateDisplay()
@@ -635,21 +621,6 @@ class MainClass:
 			self.connected = True
 			self.notif_disp_queue.put('[Connection has been established with "{0}"]'.format(self.recv_name))
 			self.GUI.connectButton.config(state='normal',text='Disconnect')
-
-# Threaded process to avoid the wait from the "recvfrom" function
-class ThreadedLoop(threading.Thread):
-	def __init__(self, socket, queue):
-		self.StartSocket = socket
-		self.recv_queue = queue
-		self.StartSocket.settimeout(0.1)
-		threading.Thread.__init__(self)
-
-	def run(self):
-		try:
-			(self.data,self.addr) = self.StartSocket.recvfrom(4096)
-			self.recv_queue.put((self.data, self.addr))
-		except:
-			pass
 
 # main function, defines tkinter and runs MainClass
 def main():
