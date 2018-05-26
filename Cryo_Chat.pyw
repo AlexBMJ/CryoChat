@@ -282,13 +282,13 @@ class MainClass:
 
 		self.TKLoop()
 
-		self.PORT_NUMBER = SocketManager.ConnectionSetup.StartListener(self.config_dict)
+		self.PORT_NUMBER = SocketManager.StartListener(self.config_dict)
 
-		self.notif_disp_queue.put(SocketManager.ConnectionSetup.GetIPaddress() + ":" + str(self.PORT_NUMBER))
+		self.notif_disp_queue.put(SocketManager.GetIPaddress() + ":" + str(self.PORT_NUMBER))
 		
 	# Main loop which updates all functions needed
 	def TKLoop(self):
-		SocketManager.ConnectionSetup.StartSocketThread(self.recv_queue)
+		SocketManager.StartSocketThread(self.recv_queue)
 		self.ProcessOutgoing()
 		self.ProcessIncoming()
 		self.GUI.UpdateDisplay()
