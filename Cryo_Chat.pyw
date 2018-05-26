@@ -1,8 +1,7 @@
 # Import Statements
-from tkinter import *
-from tkinter import ttk, messagebox
+from tkinter import Tk, PhotoImage, Frame, Entry, Button, Text, ttk, messagebox, Toplevel, Listbox, Label, ANCHOR, END, WORD
+from tkinter.ttk import Entry, Button, Separator
 from subprocess import Popen, PIPE
-from tkinter.ttk import *
 from Crypto import Random
 from Crypto.Cipher import AES
 from socket import socket, gethostbyname, gethostname, AF_INET, SOCK_DGRAM, SHUT_RDWR
