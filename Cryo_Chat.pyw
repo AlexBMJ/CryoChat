@@ -275,20 +275,18 @@ class MainClass:
 
 		self.config_dict = ConfigHandler.ReadConfig(folderpath)
 		
-
-
 		self.GUI = MainWindow(self.master, self.send_queue, self.notif_disp_queue, self.recvmsg_disp_queue, self.alert_disp_queue, self.ownmsg_disp_queue, self.config_dict, self.history)
 		self.GUI.inputEntry.focus()
 
 		self.TKLoop()
 
-		self.PORT_NUMBER = SocketManager.StartListener(self.config_dict)
+		self.PORT_NUMBER = SocketManager.SocketSetup.StartListener(self.config_dict)
 
-		self.notif_disp_queue.put(SocketManager.GetIPaddress() + ":" + str(self.PORT_NUMBER))
+		self.notif_disp_queue.put(SocketManager.SocketSetup.GetIPaddress() + ":" + str(self.PORT_NUMBER))
 		
 	# Main loop which updates all functions needed
 	def TKLoop(self):
-		SocketManager.StartSocketThread(self.recv_queue)
+		SocketManager.SocketSetup.StartSocketThread(self.recv_queue)
 		self.ProcessOutgoing()
 		self.ProcessIncoming()
 		self.GUI.UpdateDisplay()
