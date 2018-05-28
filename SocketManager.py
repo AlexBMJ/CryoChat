@@ -3,28 +3,41 @@ from tkinter import messagebox
 import sys, threading
 
 class SocketSetup():
-	def __init__(self, config_dict, recv_queue):
-		self.config_dict = config_dict
-		self.recv_queue = recv_queue
+	def __init__(self, port):
+		self.port = port
+		self.StartListener()
 
-
-	def StartListener(self, ):
-		if self.config_dict['PeerPort'].isdigit():
-			PORT_NUMBER = int(self.config_dict['PeerPort'])
+	def StartListener(self):
+		if self.port.isdigit():
+			PORT_NUMBER = int(self.port)
 			hostName = gethostbyname('0.0.0.0')
-			self.MainSocket = socket(AF_INET, SOCK_DGRAM)
 			try:
-				self.MainSocket.bind((hostName, PORT_NUMBER))
-				return PORT_NUMBER
+				MainSocket.bind((hostName, PORT_NUMBER))
 			except:
-				self.MainSocket.shutdown(SHUT_RDWR)
+				MainSocket.shutdown(SHUT_RDWR)
 				messagebox.showerror("Broadcast Error", 'Only one listener can be opened on this port (' + str(PORT_NUMBER) + ').\nTry closing any previous instances of the program.')
 				sys.exit()
 		else:
 			messagebox.showerror("Port Error", "Port must be an integer!")
 			sys.exit()
 
-		ThreadedLoop(self.MainSocket, self.recv_queue).start()
+def RecvThreadedMsg():
+	ThreadedLoop(MainSocket, recv_queue).start()
+
+
+def InitializeSocketProtocol(port, recv):
+	SocketSetup(port)
+	global recv_queue
+	recv_queue = recv
+	return str(gethostbyname(gethostname()) + ":" + str(port))
+
+MainSocket = socket(AF_INET, SOCK_DGRAM)
+
+
+
+
+
+
 
 class ThreadedLoop(threading.Thread):
 	def __init__(self, socket, queue):
