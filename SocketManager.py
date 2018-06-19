@@ -37,12 +37,8 @@ def SendMsg(msg_string):
 
 MainSocket = socket(AF_INET, SOCK_DGRAM)
 
-class EstablishConnection():
+class EstablishPeerConnection():
 	def __init__(self, GUI, ):
-
-
-
-	def EstablishPeerConnection(self):
 		eval("self.Stage_" + str(self.stage) + "()")
 
 	# Stage 0 checks for an incoming connection or a user starting it
