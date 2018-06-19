@@ -290,29 +290,31 @@ class MainClass:
 			sys.exit()
 
 		if (os.path.exists(folderpath + '\\bin\\config.txt') == False):
-
 			self.config_dict = {'DefaultName':"Anonymous",'PeerPort':"4422",'Blacklist':"[""]",'LastConnectedIP':""}
-
 			write_config = str(self.config_dict).replace('{','{\n').replace('}','\n}').replace(',',',\n').replace(' ', '')
-
 			configfile = open(folderpath + '\\bin\\config.txt', 'w')
 			configfile.write(write_config)
 			configfile.close()
-
 		configfile = open(folderpath + '\\bin\\config.txt', 'r')
 		cfg_content = configfile.read().replace('\n','')
 		configfile.close()
 
-		try:
-			self.config_dict = eval(cfg_content)
+		if cfg_content.startswith('{') and cfg_content.endswith('}') and cfg_content.count('{') == 1 and cfg_content.count('}') == 1:
+			try:
+				self.config_dict = eval(cfg_content)
+			except:
+				error()
+		else:
+			error()
 
-		except:
-			msgbox_result = messagebox.askyesno("Config File Error", '"config.txt" is either corrupt or has missing data.\nWould you like to create a new one?')
-			if (msgbox_result == True):
-				os.remove(folderpath + '\\bin\\config.txt')
-			sys.exit()
+			def error():
+				msgbox_result = messagebox.askyesno("Config File Error", '"config.txt" is either corrupt or has missing data.\nWould you like to create a new one?')
+				if (msgbox_result == True):
+					os.remove(folderpath + '\\bin\\config.txt')
+				sys.exit()
 
 		self.StartListener()
+
 
 		# This is the socket setup, which starts a listener on the given port and your local ip adress
 	def StartListener(self):
