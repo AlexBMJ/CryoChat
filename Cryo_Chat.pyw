@@ -506,6 +506,7 @@ class MainClass:
 
 	# Function which handles what stage the current setup is in
 	def EstablishPeerConnection(self):
+		print(self.stage)
 		eval("self.Stage_" + str(self.stage) + "()")
 
 	# Stage 0 checks for an incoming connection or a user starting it
