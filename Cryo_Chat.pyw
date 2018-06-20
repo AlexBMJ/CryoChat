@@ -290,7 +290,7 @@ class MainClass:
 			sys.exit()
 
 		if (os.path.exists(folderpath + '\\bin\\config.txt') == False):
-			self.config_dict = {'DefaultName':"Anonymous",'PeerPort':"4422",'Blacklist':"[""]",'LastConnectedIP':""}
+			self.config_dict = {'DefaultName':"Anonymous",'PeerPort':"4422",'Blacklist':'[""]','LastConnectedIP':""}
 			write_config = str(self.config_dict).replace('{','{\n').replace('}','\n}').replace(',',',\n').replace(' ', '')
 			configfile = open(folderpath + '\\bin\\config.txt', 'w')
 			configfile.write(write_config)
@@ -303,11 +303,13 @@ class MainClass:
 			try:
 				self.config_dict = eval(cfg_content)
 			except:
-				error()
+				configError()
+			if self.config_dict["DefaultName"] == "":
+				self.config_dict["DefaultName"] = "Anonymous"
 		else:
-			error()
+			configError()
 
-			def error():
+			def configError():
 				msgbox_result = messagebox.askyesno("Config File Error", '"config.txt" is either corrupt or has missing data.\nWould you like to create a new one?')
 				if (msgbox_result == True):
 					os.remove(folderpath + '\\bin\\config.txt')
