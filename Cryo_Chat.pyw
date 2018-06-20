@@ -304,8 +304,9 @@ class MainClass:
 				self.config_dict = eval(cfg_content)
 			except:
 				configError()
-			if self.config_dict["DefaultName"] == "":
+			if len(self.config_dict["DefaultName"]) == 0:
 				self.config_dict["DefaultName"] = "Anonymous"
+			print(self.config_dict["DefaultName"])
 		else:
 			configError()
 
