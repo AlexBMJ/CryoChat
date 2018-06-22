@@ -506,7 +506,6 @@ class MainClass:
 
 	# Function which handles what stage the current setup is in
 	def EstablishPeerConnection(self):
-		print(self.stage)
 		eval("self.Stage_" + str(self.stage) + "()")
 
 	# Stage 0 checks for an incoming connection or a user starting it
@@ -538,6 +537,7 @@ class MainClass:
 					self.stage = 2
 				else:
 					try:
+						print('test1')
 						enc_msg = self.encrypt(str(self.config_dict['DefaultName']), str(self.encryption_key))
 					except:
 						enc_msg = None
@@ -545,7 +545,7 @@ class MainClass:
 
 					verification_hash = hashlib.sha256(enc_msg + self.encryption_key.encode('utf-8')).hexdigest()
 					self.StartSocket.sendto(enc_msg + b'|' + verification_hash.encode('utf-8'),(self.ip_connected_client, self.PORT_NUMBER))
-
+					print('test2')
 					self.stage = 3
 					self.notif_disp_queue.put("[Waiting for user verification...]")
 		else:
