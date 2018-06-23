@@ -306,7 +306,6 @@ class MainClass:
 				configError()
 			if len(self.config_dict["DefaultName"]) == 0:
 				self.config_dict["DefaultName"] = "Anonymous"
-			print(self.config_dict["DefaultName"])
 		else:
 			configError()
 
@@ -511,6 +510,7 @@ class MainClass:
 	# Stage 0 checks for an incoming connection or a user starting it
 	def Stage_0(self):
 		if self.raw_msg == b'<PEER_START>' or self.startconnect == True:
+			self.stage = 1
 			self.GUI.connectButton.config(state='disabled',text='Connecting')
 			self.keygen = KeyGenerator()
 			self.PriKey = self.keygen.private_key(1024)
@@ -518,11 +518,9 @@ class MainClass:
 
 			if self.startconnect == True:
 				self.StartSocket.sendto(self.own_public,(self.target_ip_address, self.PORT_NUMBER))
-				self.stage = 1
 				self.notif_disp_queue.put("[Connecting to " + self.target_ip_address + "]")
 			else:
 				self.StartSocket.sendto(self.own_public,(self.IPaddress, self.PORT_NUMBER))
-				self.stage = 1
 				self.notif_disp_queue.put("[Incoming connection from " + self.IPaddress + "]")
 	# Stage 1 Generates keys for Diffie-hellman key exchange and sends it to the peer
 	def Stage_1(self):
@@ -537,7 +535,6 @@ class MainClass:
 					self.stage = 2
 				else:
 					try:
-						print('test1')
 						enc_msg = self.encrypt(str(self.config_dict['DefaultName']), str(self.encryption_key))
 					except:
 						enc_msg = None
@@ -545,7 +542,6 @@ class MainClass:
 
 					verification_hash = hashlib.sha256(enc_msg + self.encryption_key.encode('utf-8')).hexdigest()
 					self.StartSocket.sendto(enc_msg + b'|' + verification_hash.encode('utf-8'),(self.ip_connected_client, self.PORT_NUMBER))
-					print('test2')
 					self.stage = 3
 					self.notif_disp_queue.put("[Waiting for user verification...]")
 		else:
