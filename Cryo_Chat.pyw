@@ -520,6 +520,7 @@ class MainClass:
 				self.StartSocket.sendto(self.own_public,(self.target_ip_address, self.PORT_NUMBER))
 				self.notif_disp_queue.put("[Connecting to " + self.target_ip_address + "]")
 			else:
+				time.sleep(1)
 				self.StartSocket.sendto(self.own_public,(self.IPaddress, self.PORT_NUMBER))
 				self.notif_disp_queue.put("[Incoming connection from " + self.IPaddress + "]")
 	# Stage 1 Generates keys for Diffie-hellman key exchange and sends it to the peer
