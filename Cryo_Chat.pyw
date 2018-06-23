@@ -520,7 +520,7 @@ class MainClass:
 				self.StartSocket.sendto(self.own_public,(self.target_ip_address, self.PORT_NUMBER))
 				self.notif_disp_queue.put("[Connecting to " + self.target_ip_address + "]")
 			else:
-				time.sleep(1)
+				self.StartSocket.sendto("<PEER_START_CONFIRMED>".encode('utf-8'),(self.IPaddress, self.PORT_NUMBER))
 				self.StartSocket.sendto(self.own_public,(self.IPaddress, self.PORT_NUMBER))
 				self.notif_disp_queue.put("[Incoming connection from " + self.IPaddress + "]")
 	# Stage 1 Generates keys for Diffie-hellman key exchange and sends it to the peer
@@ -547,7 +547,10 @@ class MainClass:
 					self.notif_disp_queue.put("[Waiting for user verification...]")
 		else:
 			if self.timer > 100:
-				self.StartSocket.sendto("<PEER_STOP>".encode('utf-8'),(self.target_ip_address, self.PORT_NUMBER))
+				try:
+					self.StartSocket.sendto("<PEER_STOP>".encode('utf-8'),(self.target_ip_address, self.PORT_NUMBER))
+				except:
+					self.StartSocket.sendto("<PEER_STOP>".encode('utf-8'),(self.IPaddress, self.PORT_NUMBER))
 				self.alert_disp_queue.put("[Connection timed out]")
 				self.startconnect = False
 				self.ip_connected_client = None
