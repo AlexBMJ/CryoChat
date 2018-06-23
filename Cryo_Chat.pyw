@@ -651,6 +651,23 @@ class MainClass:
 				self.stage = 0
 				self.alert_disp_queue.put("[User has denied connection request]")
 				self.GUI.connectButton.config(state='normal',text='Connect')
+		else:
+			if self.timer >= 300:
+				try:
+					self.StartSocket.sendto("<PEER_STOP>".encode('utf-8'),(self.target_ip_address, self.PORT_NUMBER))
+				except:
+					self.StartSocket.sendto("<PEER_STOP>".encode('utf-8'),(self.IPaddress, self.PORT_NUMBER))
+				self.alert_disp_queue.put("[Connection timed out]")
+				self.startconnect = False
+				self.ip_connected_client = None
+				self.connected = False
+				self.stage = 0
+				self.timer = 0
+				self.GUI.connectButton.config(state='normal',text='Connect')
+			else:
+				if self.timer % 100 == 0:
+					self.notif_disp_queue.put("[" + str(int((300 - self.timer) / 10)) +" seconds until timeout]")
+				self.timer += 1
 
 #This completes the setup process, and get's the name of the other client
 	def Stage_4(self):
