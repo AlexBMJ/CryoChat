@@ -435,12 +435,11 @@ class MainClass:
 
 	def restartcmd(self):
 		self.disconnectcmd()
-		threading.Thread(target=self.RestartThread).start()
-		sys.exit()
-
-	def RestartThread(self):
-		time.sleep(0.2)
+		time.sleep(0.1)
+		self.StartSocket.shutdown(SHUT_RDWR)
+		self.StartSocket.close()
 		Popen(['python', scriptpath], stdout=PIPE, stderr=PIPE)
+		self.GUI.master.destroy()
 		sys.exit()
 
 	# This function handles all outgoing messages
