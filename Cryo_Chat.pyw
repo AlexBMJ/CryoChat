@@ -299,6 +299,12 @@ class MainClass:
 		cfg_content = configfile.read().replace('\n','')
 		configfile.close()
 
+		def configError():
+			msgbox_result = messagebox.askyesno("Config File Error", '"config.txt" is either corrupt or has missing data.\nWould you like to create a new one?')
+			if (msgbox_result == True):
+				os.remove(folderpath + '\\bin\\config.txt')
+			sys.exit()
+
 		if cfg_content.startswith('{') and cfg_content.endswith('}') and cfg_content.count('{') == 1 and cfg_content.count('}') == 1:
 			try:
 				self.config_dict = eval(cfg_content)
@@ -309,11 +315,7 @@ class MainClass:
 		else:
 			configError()
 
-			def configError():
-				msgbox_result = messagebox.askyesno("Config File Error", '"config.txt" is either corrupt or has missing data.\nWould you like to create a new one?')
-				if (msgbox_result == True):
-					os.remove(folderpath + '\\bin\\config.txt')
-				sys.exit()
+
 
 		self.StartListener()
 
