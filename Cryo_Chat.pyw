@@ -303,7 +303,11 @@ class MainClass:
 			msgbox_result = messagebox.askyesno("Config File Error", '"config.txt" is either corrupt or has missing data.\nWould you like to create a new one?')
 			if (msgbox_result == True):
 				os.remove(folderpath + '\\bin\\config.txt')
-				self.restartcmd()
+				startupinfo = STARTUPINFO
+				STARTUPINFO.dwFlags |= STARTF_USESHOWWINDOW
+				Popen(['python', scriptpath], stdout=PIPE, stderr=PIPE, startupinfo=startupinfo)
+				self.GUI.master.destroy()
+				sys.exit()
 			else:
 				sys.exit()
 		
