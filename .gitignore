@@ -99,3 +99,4 @@ ENV/
 .mypy_cache/
 bin/config.txt
 *.txt
+.vscode/settings.json

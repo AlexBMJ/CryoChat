@@ -3,7 +3,7 @@
 # Import Statements
 from tkinter import Tk, PhotoImage, Frame, Entry, Button, Text, ttk, messagebox, Toplevel, Listbox, Label, ANCHOR, END, WORD
 from tkinter.ttk import Entry, Button, Separator
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, STARTUPINFO, STARTF_USESHOWWINDOW
 from Crypto import Random
 from Crypto.Cipher import AES
 from socket import socket, gethostbyname, gethostname, AF_INET, SOCK_DGRAM, SHUT_RDWR
@@ -440,7 +440,9 @@ class MainClass:
 		time.sleep(0.1)
 		self.StartSocket.shutdown(SHUT_RDWR)
 		self.StartSocket.close()
-		Popen(['python', scriptpath], stdout=PIPE, stderr=PIPE)
+		startupinfo = STARTUPINFO
+		STARTUPINFO.dwFlags |= STARTF_USESHOWWINDOW
+		Popen(['python', scriptpath], stdout=PIPE, stderr=PIPE, startupinfo=startupinfo)
 		self.GUI.master.destroy()
 		sys.exit()
 
