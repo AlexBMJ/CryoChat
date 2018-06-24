@@ -303,19 +303,19 @@ class MainClass:
 			msgbox_result = messagebox.askyesno("Config File Error", '"config.txt" is either corrupt or has missing data.\nWould you like to create a new one?')
 			if (msgbox_result == True):
 				os.remove(folderpath + '\\bin\\config.txt')
-			sys.exit()
-
+				self.restartcmd()
+			else:
+				sys.exit()
+		
 		if cfg_content.startswith('{') and cfg_content.endswith('}') and cfg_content.count('{') == 1 and cfg_content.count('}') == 1:
 			try:
 				self.config_dict = eval(cfg_content)
 			except:
 				configError()
-			if len(self.config_dict["DefaultName"]) == 0:
+			if len(self.config_dict["DefaultName"]) == 0 or len(self.config_dict["DefaultName"]) >= 64:
 				self.config_dict["DefaultName"] = "Anonymous"
 		else:
 			configError()
-
-
 
 		self.StartListener()
 
